@@ -23,7 +23,7 @@ func (rows *Rows) Next(dest []driver.Value) error {
 	}
 
 	for i := range dest {
-		col := C.MyFBColumnAtIndex(row, C.uint(i))
+		col := C.GoFBColumnAtIndex(row, C.uint(i))
 		if col == nil {
 			return fmt.Errorf("no col at index %v", i)
 		}
@@ -34,32 +34,32 @@ func (rows *Rows) Next(dest []driver.Value) error {
 
 		switch dtc {
 		case C.FB_Boolean:
-			dest[i] = C.MyFBColumnValueBool(col)
+			dest[i] = C.GoFBColumnValueBool(col)
 		case C.FB_TinyInteger:
-			dest[i] = C.MyFBColumnValueTinyInt(col)
+			dest[i] = C.GoFBColumnValueTinyInt(col)
 		case C.FB_SmallInteger:
-			dest[i] = C.MyFBColumnValueSmallInt(col)
+			dest[i] = C.GoFBColumnValueSmallInt(col)
 		case C.FB_Integer:
-			dest[i] = C.MyFBColumnValueInt(col)
+			dest[i] = C.GoFBColumnValueInt(col)
 		case C.FB_LongInteger:
-			dest[i] = C.MyFBColumnValueLongInt(col)
+			dest[i] = C.GoFBColumnValueLongInt(col)
 		case C.FB_TimestampTZ:
 			fallthrough
 		case C.FB_Timestamp:
-			tval := C.struct_MyFBTimestampValue{
+			tval := C.struct_GoFBTimestampValue{
 				secs:  0,
 				nsecs: 0,
 			}
-			C.MyFBColumnValueTimestamp(col, &tval)
+			C.GoFBColumnValueTimestamp(col, &tval)
 			dest[i] = time.Unix(int64(tval.secs), int64(tval.nsecs))
 		case C.FB_Character:
 			fallthrough
 		case C.FB_VCharacter:
-			dest[i] = C.GoString(C.MyFBColumnValueChar(col))
+			dest[i] = C.GoString(C.GoFBColumnValueChar(col))
 		case C.FB_Bit:
 			fallthrough
 		case C.FB_VBit:
-			dest[i] = C.GoBytes(unsafe.Pointer(C.MyFBColumnValueBit(col)), C.MyFBColumnSizeBit(col))
+			dest[i] = C.GoBytes(unsafe.Pointer(C.GoFBColumnValueBit(col)), C.GoFBColumnSizeBit(col))
 		default:
 			return fmt.Errorf("unsupported dtc %v", dtc)
 		}

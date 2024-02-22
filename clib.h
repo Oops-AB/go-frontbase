@@ -2,28 +2,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-FBCDatabaseConnection *MyFBOpen(const char *url);
+FBCDatabaseConnection *GoFBOpen(const char *url);
 
-void MyFBClose(FBCDatabaseConnection *connection);
+void GoFBClose(FBCDatabaseConnection *connection);
 
-int MyFBPing(FBCDatabaseConnection *connection);
+int GoFBPing(FBCDatabaseConnection *connection);
 
-FBCColumn *MyFBColumnAtIndex(FBCRow *row, unsigned int i);
+FBCColumn *GoFBColumnAtIndex(FBCRow *row, unsigned int i);
 
-uint8_t MyFBColumnValueBool(FBCColumn *col);
-int8_t MyFBColumnValueTinyInt(FBCColumn *col);
-int16_t MyFBColumnValueSmallInt(FBCColumn *col);
-int32_t MyFBColumnValueInt(FBCColumn *col);
-int64_t MyFBColumnValueLongInt(FBCColumn *col);
-double MyFBColumnValueDouble(FBCColumn *col);
-char *MyFBColumnValueChar(FBCColumn *col);
+uint8_t GoFBColumnValueBool(FBCColumn *col);
+int8_t GoFBColumnValueTinyInt(FBCColumn *col);
+int16_t GoFBColumnValueSmallInt(FBCColumn *col);
+int32_t GoFBColumnValueInt(FBCColumn *col);
+int64_t GoFBColumnValueLongInt(FBCColumn *col);
+double GoFBColumnValueDouble(FBCColumn *col);
+char *GoFBColumnValueChar(FBCColumn *col);
 
-unsigned char *MyFBColumnValueBit(FBCColumn *col);
-int MyFBColumnSizeBit(FBCColumn *col);
+unsigned char *GoFBColumnValueBit(FBCColumn *col);
+int GoFBColumnSizeBit(FBCColumn *col);
 
-struct MyFBTimestampValue {
+struct GoFBTimestampValue {
   int64_t secs;
   int64_t nsecs;
 };
 
-void MyFBColumnValueTimestamp(FBCColumn *col, struct MyFBTimestampValue *res);
+void GoFBColumnValueTimestamp(FBCColumn *col, struct GoFBTimestampValue *res);

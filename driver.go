@@ -37,7 +37,7 @@ func (drv *Driver) open(name string) (driver.Conn, error) {
 	cname := C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
 
-	conn := C.MyFBOpen(cname)
+	conn := C.GoFBOpen(cname)
 	if conn == nil {
 		return nil, fmt.Errorf("drv %p: unable to open connection to '%s'", drv, name)
 	}

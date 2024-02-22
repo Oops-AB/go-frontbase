@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "clib.h"
 
-FBCDatabaseConnection *MyFBOpen(const char *url) {
+FBCDatabaseConnection *GoFBOpen(const char *url) {
 	FBCMetaData *md = fbcdcConnectToURL(url,"","_system","","sid");
 
 	if (fbcmdErrorsFound(md)) {
@@ -19,14 +19,14 @@ FBCDatabaseConnection *MyFBOpen(const char *url) {
 	return connection;
 }
 
-void MyFBClose(FBCDatabaseConnection *connection) {
+void GoFBClose(FBCDatabaseConnection *connection) {
 	if (connection == NULL) return;
 
 	fbcdcClose(connection);
 	fbcdcRelease(connection);
 }
 
-int MyFBPing(FBCDatabaseConnection *connection) {
+int GoFBPing(FBCDatabaseConnection *connection) {
 	if (connection == NULL) return 0;
 
 	const char *url = fbcdcURL(connection);
@@ -36,47 +36,47 @@ int MyFBPing(FBCDatabaseConnection *connection) {
 	return fbcdcConnected(connection);
 }
 
-FBCColumn *MyFBColumnAtIndex(FBCRow *row, unsigned int i) {
+FBCColumn *GoFBColumnAtIndex(FBCRow *row, unsigned int i) {
 	return row[i];
 }
 
-uint8_t MyFBColumnValueBool(FBCColumn *col) {
+uint8_t GoFBColumnValueBool(FBCColumn *col) {
 	return col->boolean;
 }
 
-int8_t MyFBColumnValueTinyInt(FBCColumn *col) {
+int8_t GoFBColumnValueTinyInt(FBCColumn *col) {
 	return col->tinyInteger;
 }
 
-int16_t MyFBColumnValueSmallInt(FBCColumn *col) {
+int16_t GoFBColumnValueSmallInt(FBCColumn *col) {
 	return col->tinyInteger;
 }
 
-int32_t MyFBColumnValueInt(FBCColumn *col) {
+int32_t GoFBColumnValueInt(FBCColumn *col) {
 	return col->integer;
 }
 
-int64_t MyFBColumnValueLongInt(FBCColumn *col) {
+int64_t GoFBColumnValueLongInt(FBCColumn *col) {
 	return col->longInteger;
 }
 
-double MyFBColumnValueDouble(FBCColumn *col) {
+double GoFBColumnValueDouble(FBCColumn *col) {
 	return col->real;
 }
 
-char *MyFBColumnValueChar(FBCColumn *col) {
+char *GoFBColumnValueChar(FBCColumn *col) {
 	return col->character;
 }
 
-unsigned char *MyFBColumnValueBit(FBCColumn *col) {
+unsigned char *GoFBColumnValueBit(FBCColumn *col) {
 	return col->bit.bytes;
 }
 
-int MyFBColumnSizeBit(FBCColumn *col) {
+int GoFBColumnSizeBit(FBCColumn *col) {
 	return col->bit.size;
 }
 
-void MyFBColumnValueTimestamp(FBCColumn *col, struct MyFBTimestampValue *res) {
+void GoFBColumnValueTimestamp(FBCColumn *col, struct GoFBTimestampValue *res) {
 	if (res == NULL) return;
 	double secs = col->rawTimestamp.seconds;
 

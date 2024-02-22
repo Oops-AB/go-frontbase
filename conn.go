@@ -106,7 +106,7 @@ func (dc *Conn) Prepare(query string) (driver.Stmt, error) {
 }
 
 func (dc *Conn) Close() error {
-	C.MyFBClose(dc.conn)
+	C.GoFBClose(dc.conn)
 	dc.conn = nil
 	runtime.SetFinalizer(dc, nil)
 	return nil
@@ -157,7 +157,7 @@ func (dc *Conn) rollback() error {
 
 // Pinger
 func (dc *Conn) Ping(ctx context.Context) error {
-	if C.MyFBPing(dc.conn) == 0 {
+	if C.GoFBPing(dc.conn) == 0 {
 		return driver.ErrBadConn
 	}
 	return nil
@@ -191,7 +191,7 @@ func (dc *Conn) exec(sql string, commit bool, warn bool) (*C.FBCMetaData, error)
 	md := C.fbcdcExecuteSQL(dc.conn, csql, C.uint(clen), C.uint(commitFlags))
 
 	if md == nil && C.fbcdcConnected(dc.conn) == 0 {
-		C.MyFBClose(dc.conn)
+		C.GoFBClose(dc.conn)
 		return nil, fmt.Errorf("conn %p: no database connection", dc)
 	}
 
