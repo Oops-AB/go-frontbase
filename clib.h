@@ -1,6 +1,7 @@
 #include <FBCAccess/FBCAccess.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 FBCDatabaseConnection *GoFBOpen(const char *url);
 
