@@ -49,7 +49,7 @@ int8_t GoFBColumnValueTinyInt(FBCColumn *col) {
 }
 
 int16_t GoFBColumnValueSmallInt(FBCColumn *col) {
-	return col->tinyInteger;
+	return col->shortInteger;
 }
 
 int32_t GoFBColumnValueInt(FBCColumn *col) {
