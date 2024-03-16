@@ -107,7 +107,7 @@ func expectOneCol[V comparable](expected V) func(*testing.T, *sql.Rows) {
 	}
 }
 
-// A temporary in-memory FrontBase database.
+// A temporary in-process, FrontBase database.
 type tempdb struct {
 	dir string
 	db  *sql.DB
