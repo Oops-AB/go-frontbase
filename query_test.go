@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 var database = frontbaseTestDB{}
@@ -49,6 +50,46 @@ func TestQuery_longint(t *testing.T) {
 	database.RunTestOneRow(t,
 		"create table t0 ( val longint ); insert into t0 values ( -9223372036854775808 );",
 		expectOneCol(int64(-9223372036854775808)))
+}
+
+func TestQuery_boolean(t *testing.T) {
+	database.RunTestOneRow(t,
+		"create table t0 ( val boolean ); insert into t0 values ( true );",
+		expectOneCol(bool(true)))
+
+	database.RunTestOneRow(t,
+		"create table t0 ( val boolean ); insert into t0 values ( false );",
+		expectOneCol(bool(false)))
+}
+
+func TestQuery_timestamp(t *testing.T) {
+	expected := utcTime(t, "2024-03-16 01:02:03.000").Local()
+
+	// Note that the driver always sets the session timezone to UTC.
+	// Timestamp encoding and decoding depend on this.
+	database.RunTestOneRow(t,
+		"create table t0 ( val timestamp ); insert into t0 values ( timestamp '2024-03-16 01:02:03' );",
+		expectOneCol(expected))
+}
+
+func TestQuery_character(t *testing.T) {
+	database.RunTestOneRow(t,
+		"create table t0 ( val character(10) ); insert into t0 values ( 'helo world' );",
+		expectOneCol("helo world"))
+
+	database.RunTestOneRow(t,
+		"create table t0 ( val character(10) ); insert into t0 values ( '' );",
+		expectOneCol(""))
+}
+
+func TestQuery_character_varying(t *testing.T) {
+	database.RunTestOneRow(t,
+		"create table t0 ( val character varying(9797) ); insert into t0 values ( 'helo world' );",
+		expectOneCol("helo world"))
+
+	database.RunTestOneRow(t,
+		"create table t0 ( val character varying(9797) ); insert into t0 values ( '' );",
+		expectOneCol(""))
 }
 
 // An empty type used as a namespace for test runner functions.
@@ -151,4 +192,20 @@ func (tdb tempdb) mustExec(sql string, args ...interface{}) sql.Result {
 		tdb.t.Fatalf("Error running %q: %v", sql, err)
 	}
 	return res
+}
+
+// Create a Time from `spec`. The specification is on the
+// form "yyyy-MM-dd HH:mm:ss.SSS" and is interpreted in UTC.
+func utcTime(t *testing.T, spec string) time.Time {
+	loc, err := time.LoadLocation("UTC")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	stamp, err := time.ParseInLocation("2006-01-02 03:04:05.000", spec, loc)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return stamp
 }

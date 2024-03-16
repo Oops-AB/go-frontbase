@@ -34,7 +34,7 @@ func (rows *Rows) Next(dest []driver.Value) error {
 
 		switch dtc {
 		case C.FB_Boolean:
-			dest[i] = C.GoFBColumnValueBool(col)
+			dest[i] = C.GoFBColumnValueBool(col) != 0
 		case C.FB_TinyInteger:
 			dest[i] = C.GoFBColumnValueTinyInt(col)
 		case C.FB_SmallInteger:
