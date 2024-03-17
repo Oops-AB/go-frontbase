@@ -1,6 +1,7 @@
 package frontbase
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
@@ -90,6 +91,41 @@ func TestQuery_character_varying(t *testing.T) {
 	database.RunTestOneRow(t,
 		"create table t0 ( val character varying(9797) ); insert into t0 values ( '' );",
 		expectOneCol(""))
+}
+
+func TestQuery_bit(t *testing.T) {
+	tdb := createTempdb(t)
+	defer tdb.tearDown()
+
+	scanAndCompare := func (sqlPart string, expected []byte) {
+		t.Logf("scanning: %s", sqlPart)
+		var actual []byte
+		err := tdb.db.QueryRow("values (cast(" + sqlPart + "));").Scan(&actual)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !bytes.Equal(expected, actual) {
+			t.Errorf("expected %#v got %#v", expected, actual)
+		}
+	}
+
+	for _, btype := range []string{"bit","bit varying"} {
+		scanAndCompare(fmt.Sprintf("x'00' as %s(8)", btype), []byte{0x00})
+		scanAndCompare(fmt.Sprintf("x'01' as %s(8)", btype), []byte{0x01})
+		scanAndCompare(fmt.Sprintf("x'42' as %s(8)", btype), []byte{0x42})
+		scanAndCompare(fmt.Sprintf("x'ff' as %s(8)", btype), []byte{0xff})
+
+		scanAndCompare(fmt.Sprintf("x'0000' as %s(16)", btype), []byte{0,0})
+		scanAndCompare(fmt.Sprintf("x'0100' as %s(16)", btype), []byte{1,0})
+		scanAndCompare(fmt.Sprintf("x'0001' as %s(16)", btype), []byte{0,1})
+		scanAndCompare(fmt.Sprintf("x'abcd' as %s(16)", btype), []byte{0xab, 0xcd})
+
+		scanAndCompare(fmt.Sprintf("x'000000' as %s(24)", btype), []byte{0,0,0})
+		scanAndCompare(fmt.Sprintf("x'000100' as %s(24)", btype), []byte{0,1,0})
+		scanAndCompare(fmt.Sprintf("x'010000' as %s(24)", btype), []byte{1,0,0})
+
+		scanAndCompare(fmt.Sprintf("x'012345678901234567890fec' as %s(96)", btype), []byte{0x01,0x23,0x45,0x67,0x89,0x01,0x23,0x45,0x67,0x89,0x0f,0xec})
+	}
 }
 
 // An empty type used as a namespace for test runner functions.
