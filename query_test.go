@@ -128,6 +128,32 @@ func TestQuery_bit(t *testing.T) {
 	}
 }
 
+func TestQuery_double(t *testing.T) {
+	tdb := createTempdb(t)
+	defer tdb.tearDown()
+
+	scanAndCompare := func (sqlPart string, expected float64) {
+		t.Logf("scanning: %s", sqlPart)
+		var actual float64
+		err := tdb.db.QueryRow("values (cast(" + sqlPart + "));").Scan(&actual)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if expected != actual {
+			t.Errorf("expected %#v got %#v", expected, actual)
+		}
+	}
+
+	// from a test in github.com/lib/pq
+	scanAndCompare("0.10000122 as float", float64(0.10000122))
+	scanAndCompare("35.03554004971999 as double precision", float64(35.03554004971999))
+	scanAndCompare("1.2 as float", float64(1.2))
+
+	// and with double precision substituted for float.
+	scanAndCompare("0.10000122 as double precision", float64(0.10000122))
+	scanAndCompare("1.2 as double precision", float64(1.2000000000000002))
+}
+
 // An empty type used as a namespace for test runner functions.
 type frontbaseTestDB struct{}
 

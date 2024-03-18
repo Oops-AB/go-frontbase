@@ -60,6 +60,10 @@ func (rows *Rows) Next(dest []driver.Value) error {
 			fallthrough
 		case C.FB_VBit:
 			dest[i] = C.GoBytes(unsafe.Pointer(C.GoFBColumnValueBit(col)), C.GoFBColumnSizeBit(col))
+		case C.FB_Float:
+			dest[i] = float32(C.GoFBColumnValueDouble(col))
+		case C.FB_Double:
+			dest[i] = float64(C.GoFBColumnValueDouble(col))
 		default:
 			return fmt.Errorf("unsupported dtc %v", dtc)
 		}
