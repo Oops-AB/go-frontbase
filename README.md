@@ -9,6 +9,9 @@ This package is a [database/sql driver](https://pkg.go.dev/database/sql)
     - select all supported types, including NULL.
     - insert all supported types, including NULL.
     - esp. handle NULL values when iterating Rows.
+    - DECIMAL and REAL decodes as float64 by default.
+    - cast(c as character) on DECIMAL/REAL columns for full precision.
+    - Custom type for encoding DECIMAL/REAL with correct precision? (I think I've seen custom types in postgre for things like arrays; is this a solution?)
 - Support context cancellation where possible.
 - Pass the [compatibility test suite](https://github.com/bradfitz/go-sql-test).
 - Add support for BLOBs.
