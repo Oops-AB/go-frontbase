@@ -64,6 +64,8 @@ func (rows *Rows) Next(dest []driver.Value) error {
 			dest[i] = float32(C.GoFBColumnValueDouble(col))
 		case C.FB_Double:
 			dest[i] = float64(C.GoFBColumnValueDouble(col))
+		case C.FB_Decimal:
+			dest[i] = float64(C.GoFBColumnValueDecimal(col))
 		default:
 			return fmt.Errorf("unsupported dtc %v", dtc)
 		}

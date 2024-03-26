@@ -17,6 +17,7 @@ int16_t GoFBColumnValueSmallInt(FBCColumn *col);
 int32_t GoFBColumnValueInt(FBCColumn *col);
 int64_t GoFBColumnValueLongInt(FBCColumn *col);
 double GoFBColumnValueDouble(FBCColumn *col);
+double GoFBColumnValueDecimal(FBCColumn *col);
 char *GoFBColumnValueChar(FBCColumn *col);
 
 unsigned char *GoFBColumnValueBit(FBCColumn *col);

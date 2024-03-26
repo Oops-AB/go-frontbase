@@ -154,6 +154,27 @@ func TestQuery_double(t *testing.T) {
 	scanAndCompare("1.2 as double precision", float64(1.2000000000000002))
 }
 
+func TestQuery_decimal_defaults_to_double(t *testing.T) {
+	tdb := createTempdb(t)
+	defer tdb.tearDown()
+
+	scanAndCompare := func (sqlPart string, expected float64) {
+		t.Logf("scanning: %s", sqlPart)
+		var actual float64
+		err := tdb.db.QueryRow("values (cast(" + sqlPart + "));").Scan(&actual)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if expected != actual {
+			t.Errorf("expected %#v got %#v", expected, actual)
+		}
+	}
+
+	scanAndCompare("0.10000122 as decimal(8,8)", float64(0.10000122))
+	scanAndCompare("35.03554004971999 as decimal(16,14)", float64(35.03554004971999))
+	scanAndCompare("1.2 as decimal(2,1)", float64(1.2000000000000002))
+}
+
 // An empty type used as a namespace for test runner functions.
 type frontbaseTestDB struct{}
 

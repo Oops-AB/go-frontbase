@@ -64,6 +64,10 @@ double GoFBColumnValueDouble(FBCColumn *col) {
 	return col->real;
 }
 
+double GoFBColumnValueDecimal(FBCColumn *col) {
+	return col->decimal;
+}
+
 char *GoFBColumnValueChar(FBCColumn *col) {
 	return col->character;
 }
