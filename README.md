@@ -8,7 +8,6 @@ This package is a [database/sql driver](https://pkg.go.dev/database/sql)
 - Proper test suite for the main driver.
     - select all supported types, including NULL.
     - insert all supported types, including NULL.
-    - esp. handle NULL values when iterating Rows.
     - cast(c as character) on DECIMAL/REAL columns for full precision.
     - Custom type for encoding DECIMAL/REAL with correct precision? (I think I've seen custom types in postgre for things like arrays; is this a solution?)
 - Support context cancellation where possible.

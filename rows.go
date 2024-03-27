@@ -22,10 +22,18 @@ func (rows *Rows) Next(dest []driver.Value) error {
 		return io.EOF
 	}
 
+	colCount := C.fbcmdColumnCount(rows.md)
+
+	if C.uint(len(dest)) > colCount {
+		return fmt.Errorf("actual column count %d less than requested number of values %d", colCount, len(dest))
+	}
+
 	for i := range dest {
 		col := C.GoFBColumnAtIndex(row, C.uint(i))
+
 		if col == nil {
-			return fmt.Errorf("no col at index %v", i)
+			dest[i] = nil
+			continue
 		}
 
 		cmd := C.fbcmdColumnMetaDataAtIndex(rows.md, C.uint(i))
