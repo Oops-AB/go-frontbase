@@ -13,6 +13,7 @@ This package is a [database/sql driver](https://pkg.go.dev/database/sql)
 - Support context cancellation where possible.
 - Pass the [compatibility test suite](https://github.com/bradfitz/go-sql-test).
 - Add support for BLOBs.
+- Handle multiple result sets.
 - Support comments in the prepared statements SQL parser.
 - Doc: build and use with macOS.
 - Doc: build and use with Docker (and therefore linux).
